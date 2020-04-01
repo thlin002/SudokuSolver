@@ -1,6 +1,4 @@
-#include<vector>
 #include"sudoku.h"
-using namespace std;
 /*
 const vector<vector<int> > Sudoku::gen = {{1,2,3,4,5,6,7,8,9},
 				    	  {4,5,6,7,8,9,1,2,3},

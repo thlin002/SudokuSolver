@@ -1,6 +1,5 @@
-#include<iostream>
-#include<sudoku.h>
-using namespace std;
+#include"sudoku.h"
+
 int main(){
     return 0;
 }

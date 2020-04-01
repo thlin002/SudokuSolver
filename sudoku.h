@@ -2,6 +2,7 @@
 #ifndef SUDOKU_H
 #define SUDOKU_H
 using namespace std;
+using namespace std;
 /***************************************************
  * Finish your .cpp according to this header file. *
  * You can modify this file if needed.             *
