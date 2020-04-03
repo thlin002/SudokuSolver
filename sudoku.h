@@ -11,7 +11,7 @@ using namespace std;
 class Sudoku{
 public:
 	Sudoku();
-
+    Sudoku(vector<vector<int> > n);
 	// generate
 	static Sudoku generate();
 
@@ -28,16 +28,5 @@ public:
 	//Data Member
 	static const vector<vector<int> > gen;
 	vector<vector<int> > prob;
-/*
-							  {{1,2,3,4,5,6,7,8,9},
-		                	                   {4,5,6,7,8,9,1,2,3},
-                		                           {7,8,9,1,2,3,4,5,6},
-                                		           {3,1,2,6,4,5,9,7,8},
-      							   {6,4,5,9,7,8,3,1,2},
-        						   {9,7,8,3,1,2,6,4,5},
-         						   {2,3,1,5,6,4,8,9,7},
-       							   {5,6,4,8,9,7,2,3,1},
-       							   {8,9,7,2,3,1,5,6,4}};
-*/
 };
 #endif // SUDOKU_H
