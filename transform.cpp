@@ -46,6 +46,8 @@ int main(){
                 trans.rotate(x);
                 break;
             case 5:
+                cin >> x;
+                trans.flip(x);
                 break;
             default:
                 cout << "something went wrong";

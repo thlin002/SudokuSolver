@@ -103,9 +103,23 @@ void Sudoku::rotate(int x){
     }
 }
 void Sudoku::flip(int x){
-    vector<vector<int> > temp(4, vector<int> (9,0));
-    for(int i = 0; i < 4; ++i){
-        
+    if(x == 0){
+        vector<vector<int> > temp(4, vector<int> (9,0));
+        for(int i = 0; i < 4; ++i){
+            temp.at(i) = prob.at(8-i);
+            prob.at(8-i) = prob.at(i);
+            prob.at(i) = temp.at(i);
+        }
+    }
+    else{
+        vector<vector<int> >temp(9, vector<int> (4,0));
+        for(int i = 0; i < 4; ++i){
+            for(int j = 0; j < 9; ++j){
+                temp.at(j).at(i) = prob.at(j).at(8-i);
+                prob.at(j).at(8-i) = prob.at(j).at(i);
+                prob.at(j).at(i) = temp.at(j).at(i);
+            }
+        }
     }
 }
 //Solve
