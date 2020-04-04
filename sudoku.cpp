@@ -67,11 +67,49 @@ void Sudoku::swapNum(int x, int y){
         }
     }
 }
-void Sudoku::swapRow(int x, int y){}
-void Sudoku::swapCol(int x, int y){}
-void Sudoku::rotate(int x){}
-void Sudoku::flip(int x){}
+void Sudoku::swapRow(int x, int y){
+    vector<vector<int> > temp(3, vector<int> (9,0));
+    for( int i = 0; i < 3; ++i ){
+        int n = 3*x - 3 + i;
+        int m = 3*y - 3 + i;
+        temp.at(i) = prob.at(n);
+        prob.at(n) = prob.at(m);
+        prob.at(m) = temp.at(i);
+    }
+}
+
+void Sudoku::swapCol(int x, int y){
+    vector<vector<int> > temp(9, vector<int> (3,0));
+    for(int i = 0; i < 3; ++i){
+        for(int j =0; j < 9; ++j){
+            int n = 3*x - 3 + i;
+            int m = 3*y - 3 + i;
+            temp.at(j).at(i) = prob.at(j).at(n);
+            prob.at(j).at(n) = prob.at(j).at(m);
+            prob.at(j).at(m) = temp.at(j).at(i);
+        }
+    }
+}
+
+void Sudoku::rotate(int x){
+    vector<vector<int> > temp(9, vector<int> (3,0));
+    for(int i = 0; i < x; ++i){
+        temp = prob;
+        for(int j = 0; j < 9; ++j){
+            for(int k = 0; k < 9; ++k){
+                prob.at(j).at(8-k) = temp.at(k).at(j);
+            }
+        }
+    }
+}
+void Sudoku::flip(int x){
+    vector<vector<int> > temp(4, vector<int> (9,0));
+    for(int i = 0; i < 4; ++i){
+        
+    }
+}
 //Solve
 int Sudoku::solve(){
+
 	return 0;
 }

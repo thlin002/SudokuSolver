@@ -34,10 +34,16 @@ int main(){
                 trans.swapNum(x,y);
                 break;
             case 2:
+                cin >> x >> y;
+                trans.swapRow(x,y);
                 break;
             case 3:
+                cin >> x >> y;
+                trans.swapCol(x,y);
                 break;
             case 4:
+                cin >> x;
+                trans.rotate(x);
                 break;
             case 5:
                 break;
