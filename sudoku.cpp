@@ -16,7 +16,7 @@ const vector<vector<int> > Sudoku::gen = {{1,2,3,4,5,6,7,8,9},
 Sudoku::Sudoku(){}
 Sudoku::Sudoku(vector<vector<int> > n){
     prob = n;
-    for(int i = 0; i < 9; ++i){
+    for(int i = 0; i < 9; ++i){ //initialoze to all pulled down
         for(int j = 0; j < 9; ++j){
             for(int k = 0; k < 9; ++k){
                 alm[i][j][k] = 0;
@@ -27,7 +27,6 @@ Sudoku::Sudoku(vector<vector<int> > n){
         for(int j = 0; j < 9; ++j){
             if(prob.at(i).at(j) == 0){  //first double forloop is to identify void location
                 for(int k = 0; k < 9; ++k){  // Row check
-//                    alm[i][j][k] = 0;        //initialize to all pulled down
                     if(prob.at(i).at(k) > 0){
                         alm[i][j][prob.at(i).at(k)-1] = 1;   // non-available digit's bit is raised
                     }
@@ -54,7 +53,7 @@ Sudoku::Sudoku(vector<vector<int> > n){
             }
         }
     }
-
+/*
     for(int i = 0; i < 9; ++i){     //print to check alm.
         for(int j = 0; j < 9; ++j){
             cout << "index" << i << ',' << j << " : ";
@@ -65,7 +64,9 @@ Sudoku::Sudoku(vector<vector<int> > n){
         }
         cout << endl;
     }
+*/
 }
+
 //Generate
 Sudoku Sudoku::generate(){
     int a,b;
@@ -79,6 +80,7 @@ Sudoku Sudoku::generate(){
     }
 	return sgen;
 }
+
 //Transform
 void Sudoku::swapNum(int x, int y){
     int xs[9];
@@ -116,6 +118,7 @@ void Sudoku::swapNum(int x, int y){
         }
     }
 }
+
 void Sudoku::swapRow(int x, int y){
     vector<vector<int> > temp(3, vector<int> (9,0));
     for( int i = 0; i < 3; ++i ){
@@ -151,6 +154,7 @@ void Sudoku::rotate(int x){
         }
     }
 }
+
 void Sudoku::flip(int x){
     if(x == 0){
         vector<vector<int> > temp(4, vector<int> (9,0));
@@ -171,8 +175,33 @@ void Sudoku::flip(int x){
         }
     }
 }
-//Solve
-int Sudoku::solve(){
 
+//Solve
+int check(int x, vector<vector<int> > temp){
+    
+}
+
+int backtrack( int x, int alm[][9][9], vector<vector<int> >temp){
+    int col = x % 9;
+    int rol = x / 9;
+//    cout << col << ' ' << rol;
+    int count = 0;
+    while(count < 9){
+        int a = check(x, temp); 
+        if(a > 0 || x < 81){
+            ++x;
+            backtrack(x, alm, temp)
+        }
+        ++count;
+    }
+    else{
+        return 0;
+    }
+}
+
+int Sudoku::solve(){
+    int x = 0;
+    vector<vector<int> >temp(prob);
+    backtrack(x, alm, temp);
 	return 0;
 }
