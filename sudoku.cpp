@@ -15,7 +15,56 @@ const vector<vector<int> > Sudoku::gen = {{1,2,3,4,5,6,7,8,9},
 //Constructor
 Sudoku::Sudoku(){}
 Sudoku::Sudoku(vector<vector<int> > n){
-    prob = n;    
+    prob = n;
+    for(int i = 0; i < 9; ++i){
+        for(int j = 0; j < 9; ++j){
+            for(int k = 0; k < 9; ++k){
+                alm[i][j][k] = 0;
+            }
+        }
+    }
+    for(int i = 0; i < 9; ++i){
+        for(int j = 0; j < 9; ++j){
+            if(prob.at(i).at(j) == 0){  //first double forloop is to identify void location
+                for(int k = 0; k < 9; ++k){  // Row check
+//                    alm[i][j][k] = 0;        //initialize to all pulled down
+                    if(prob.at(i).at(k) > 0){
+                        alm[i][j][prob.at(i).at(k)-1] = 1;   // non-available digit's bit is raised
+                    }
+                }
+                for(int k = 0; k < 9; ++k){  //Column check
+                    if(prob.at(k).at(j) > 0){
+                        alm[i][j][prob.at(k).at(j)-1] = 1;
+                    }
+                }
+                int bc = j/3;
+                int br = i/3;
+                for(int k = br*3; k < br*3+3; ++k){ //Box check
+                    for(int m = bc*3; m < bc*3+3; ++m){
+                        if(prob.at(k).at(m) > 0){
+                            alm[i][j][prob.at(k).at(m)-1] = 1;
+                        }
+                    }
+                }
+            }
+            else{   //for filled spuare raise every digit
+                for(int k = 0; k < 9; ++k){
+                    alm[i][j][k] = 1;
+                }
+            }
+        }
+    }
+
+    for(int i = 0; i < 9; ++i){     //print to check alm.
+        for(int j = 0; j < 9; ++j){
+            cout << "index" << i << ',' << j << " : ";
+            for(int k = 0; k < 9; ++k){
+                cout << (alm[i][j][k]?0:(k+1)) << " , ";
+            }
+            cout << endl; 
+        }
+        cout << endl;
+    }
 }
 //Generate
 Sudoku Sudoku::generate(){
