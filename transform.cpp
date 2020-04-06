@@ -7,7 +7,8 @@ void printVec(vector<vector<int> > a){
     for(int i = 0; i < 9; ++i){
         for(int j = 0; j < 9; ++j){
             cout << a.at(i).at(j);
-            cout << " ";
+            if(j != 8)
+                cout << " ";
         }
         cout << endl; 
     }
