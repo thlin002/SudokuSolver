@@ -2,10 +2,10 @@
 #include"sudoku.h"
 using namespace std;
 
-void printvec(vector<vector<int> >n){
+void printarr(int n[][9] ){
     for(int i = 0; i < 9 ; ++i){
         for( int j = 0; j < 9; ++j){
-            cout << n.at(i).at(j) << ' ';
+            cout << n[i][j] << ' ';
         }
         cout << endl;
     }
@@ -20,6 +20,6 @@ int main(){
     }
     Sudoku sp(n);
     sp.solve();
-    printvec(sp.ans);
+    printarr(sp.ans);
 	return 0;
 }

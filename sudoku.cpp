@@ -2,6 +2,15 @@
 #include<cstdlib>
 #include<ctime>
 #include<iostream>
+void printstate(vector<vector<int> > n){
+    for(int i = 0; i < 9; ++i){
+        for(int j = 0; j < 9; ++j){
+            cout << n.at(i).at(j) << ' ';
+        }
+        cout << endl;
+    }
+}
+
 const vector<vector<int> > Sudoku::gen = {{1,2,3,4,5,6,7,8,9},
                 				    	  {4,5,6,7,8,9,1,2,3},
                     				  	  {7,8,9,1,2,3,4,5,6},
@@ -16,9 +25,9 @@ const vector<vector<int> > Sudoku::gen = {{1,2,3,4,5,6,7,8,9},
 Sudoku::Sudoku(){}
 Sudoku::Sudoku(vector<vector<int> > n){
     prob = n;
-    ans = n;
-    for(int i = 0; i < 9; ++i){     //initialize to all pulled down
+    for(int i = 0; i < 9; ++i){     //initialize alm to all pulled down, and ans to 0.
         for(int j = 0; j < 9; ++j){
+            ans[i][j] = 0;
             for(int k = 0; k < 9; ++k){
                 alm[i][j][k] = 0;
             }
@@ -198,11 +207,13 @@ int check(int vx, vector<vector<int> > temp){
     for(int k = 0; k < 9; ++k){  // Row check
         if(temp.at(row).at(k) == temp.at(row).at(col) && k != col){
             b = 0;
+            cout << "nopassrow" << endl;
         }
     }
     for(int k = 0; k < 9; ++k){  //Column check
         if(temp.at(k).at(col) == temp.at(row).at(col) && k != row){
             b = 0;
+            cout << "nopasscol" << endl;
         }
     }
     int bc = col/3;
@@ -211,41 +222,46 @@ int check(int vx, vector<vector<int> > temp){
         for(int m = bc*3; m < bc*3+3; ++m){
             if(temp.at(k).at(m) == temp.at(row).at(col) && k != row && m != col ){
                 b = 0;
+                cout << "nopassbox" << endl;
             }
         }
     }
     return b;    
 }
 
-vector<vector<int> > backtrack( int x, int v[], int alm[][9][9], vector<vector<int> >temp, int *s){
+vector<vector<int> > backtrack( int x, int v[], int alm[][9][9], vector<vector<int> >temp, int *s, int ans[][9]){
     int col = v[x] % 9;
     int row = v[x] / 9;
-    vector<vector<int> >ans;
     int count = 0;
     while(count < 9){
-        temp.at(row).at(col) = alm[row][col][count]?temp.at(row).at(col):(count+1);
-        int a = check(v[x], temp); 
-        if(a > 0 && x < v[0]){
-            ++x;
-            ans = backtrack(x, v, alm, temp, s);
-        }
-        else if(a > 0 || x == v[0]){
-            ans = temp;
-            if(*s < 2){
-                ++(*s);
+        if(alm[row][col][count] == 0){
+            temp.at(row).at(col) = (count+1);
+            cout << row << " , " << col << ": " << temp.at(row).at(col) << endl;
+            int a = check(v[x], temp); 
+            if(a > 0 && x < v[0]){
+                printstate(temp);
+                temp = backtrack(x+1, v, alm, temp, s, ans);
+                cout << endl;
+                printstate(temp);
             }
-            else{
-                *s = 2;
+            else if(a > 0 || x == v[0]){
+                for(int i = 0; i < 9; ++i){
+                    for(int j = 0; j < 9; ++j){
+                        ans[i][j] = temp.at(i).at(j);
+                    }
+                }
+                if(*s < 2){
+                    ++(*s);
+                }
+                else{
+                    *s = 2;
+                }
             }
         }
         ++count;    //
     }
-    if(*s == 1){
-        return ans;
-    }
-    else{
-        return temp;
-    }
+    temp.at(row).at(col) = 0;
+    return temp;
 }
 
 int Sudoku::solve(){
@@ -255,7 +271,14 @@ int Sudoku::solve(){
     state = 0;
     s = &state;
     vector<vector<int> >temp(prob);
-    ans = backtrack(x, v, alm, temp, s);
-    cout << *s << endl;
+/*
+    for( int i = 0; i < 9; ++i){
+        for( int j = 0; j < 9; ++j){
+            temp[i][j] = prob.at(i).at(j);
+        }
+    }
+*/
+    temp = backtrack(x, v, alm, temp, s, ans);
+    cout << "num of sol:"  << *s << endl;
 	return 0;
 }
