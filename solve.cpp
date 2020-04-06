@@ -13,6 +13,7 @@ void printarr(int n[][9] ){
 
 int main(){
     vector<vector<int> > n(9, vector<int> (9,0));
+//    cout << "##input" << endl;
     for(int i = 0; i < 9; ++i){
         for(int j = 0; j < 9; ++j){
             cin >> n.at(i).at(j);
@@ -20,6 +21,9 @@ int main(){
     }
     Sudoku sp(n);
     sp.solve();
-    printarr(sp.ans);
+    cout << sp.state << endl;
+    if(sp.state == 1){
+        printarr(sp.ans);
+    }
 	return 0;
 }

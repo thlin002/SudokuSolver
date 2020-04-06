@@ -25,6 +25,7 @@ const vector<vector<int> > Sudoku::gen = {{1,2,3,4,5,6,7,8,9},
 Sudoku::Sudoku(){}
 Sudoku::Sudoku(vector<vector<int> > n){
     prob = n;
+    state = 0;
     for(int i = 0; i < 9; ++i){     //initialize alm to all pulled down, and ans to 0.
         for(int j = 0; j < 9; ++j){
             ans[i][j] = 0;
@@ -126,7 +127,7 @@ void Sudoku::swapNum(int x, int y){
         if(xe == 0){
             xs[i] = -1;
         }
-        else if(ye == 0){
+        if(ye == 0){
             ys[i] = -1;
         }
     }
@@ -145,8 +146,8 @@ void Sudoku::swapNum(int x, int y){
 void Sudoku::swapRow(int x, int y){
     vector<vector<int> > temp(3, vector<int> (9,0));
     for( int i = 0; i < 3; ++i ){
-        int n = 3*x - 3 + i;
-        int m = 3*y - 3 + i;
+        int n = 3*x + i;
+        int m = 3*y + i;
         temp.at(i) = prob.at(n);
         prob.at(n) = prob.at(m);
         prob.at(m) = temp.at(i);
@@ -157,8 +158,8 @@ void Sudoku::swapCol(int x, int y){
     vector<vector<int> > temp(9, vector<int> (3,0));
     for(int i = 0; i < 3; ++i){
         for(int j =0; j < 9; ++j){
-            int n = 3*x - 3 + i;
-            int m = 3*y - 3 + i;
+            int n = 3*x + i;
+            int m = 3*y + i;
             temp.at(j).at(i) = prob.at(j).at(n);
             prob.at(j).at(n) = prob.at(j).at(m);
             prob.at(j).at(m) = temp.at(j).at(i);
@@ -207,13 +208,13 @@ int check(int vx, vector<vector<int> > temp){
     for(int k = 0; k < 9; ++k){  // Row check
         if(temp.at(row).at(k) == temp.at(row).at(col) && k != col){
             b = 0;
-            cout << "nopassrow" << endl;
+//            cout << "nopassrow" << endl;
         }
     }
     for(int k = 0; k < 9; ++k){  //Column check
         if(temp.at(k).at(col) == temp.at(row).at(col) && k != row){
             b = 0;
-            cout << "nopasscol" << endl;
+//            cout << "nopasscol" << endl;
         }
     }
     int bc = col/3;
@@ -222,7 +223,7 @@ int check(int vx, vector<vector<int> > temp){
         for(int m = bc*3; m < bc*3+3; ++m){
             if(temp.at(k).at(m) == temp.at(row).at(col) && k != row && m != col ){
                 b = 0;
-                cout << "nopassbox" << endl;
+//                cout << "nopassbox" << endl;
             }
         }
     }
@@ -236,15 +237,17 @@ vector<vector<int> > backtrack( int x, int v[], int alm[][9][9], vector<vector<i
     while(count < 9){
         if(alm[row][col][count] == 0){
             temp.at(row).at(col) = (count+1);
-            cout << row << " , " << col << ": " << temp.at(row).at(col) << endl;
+//            cout << row << " , " << col << ": " << temp.at(row).at(col) << endl;
             int a = check(v[x], temp); 
-            if(a > 0 && x < v[0]){
-                printstate(temp);
+            if(a > 0 && x < v[0] && *s < 2){
+//                printstate(temp);
                 temp = backtrack(x+1, v, alm, temp, s, ans);
-                cout << endl;
-                printstate(temp);
+//                cout << endl;
+//                printstate(temp);
+//                cout << endl;
             }
-            else if(a > 0 || x == v[0]){
+            else if(a > 0 && x == v[0]){
+//                printstate(temp);
                 for(int i = 0; i < 9; ++i){
                     for(int j = 0; j < 9; ++j){
                         ans[i][j] = temp.at(i).at(j);
@@ -252,10 +255,14 @@ vector<vector<int> > backtrack( int x, int v[], int alm[][9][9], vector<vector<i
                 }
                 if(*s < 2){
                     ++(*s);
+//                    cout << *s << endl;
                 }
                 else{
                     *s = 2;
                 }
+            }
+            else if(*s > 2){
+                return temp;
             }
         }
         ++count;    //
@@ -266,10 +273,9 @@ vector<vector<int> > backtrack( int x, int v[], int alm[][9][9], vector<vector<i
 
 int Sudoku::solve(){
     int x = 1;
-    int state;
     int *s;
-    state = 0;
     s = &state;
+//    cout << *s << endl;
     vector<vector<int> >temp(prob);
 /*
     for( int i = 0; i < 9; ++i){
@@ -279,6 +285,6 @@ int Sudoku::solve(){
     }
 */
     temp = backtrack(x, v, alm, temp, s, ans);
-    cout << "num of sol:"  << *s << endl;
+//    cout << "num of sol:"  << *s << endl;
 	return 0;
 }

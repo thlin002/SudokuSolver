@@ -54,7 +54,6 @@ int main(){
                 return 0;
         }
     }
-    cout << endl;
     printVec(trans.prob);
 	return 0;
 }

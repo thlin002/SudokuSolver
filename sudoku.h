@@ -29,6 +29,7 @@ public:
 	static const vector<vector<int> > gen;
 	vector<vector<int> > prob;
     int ans[9][9];
+    int state;
     int alm[9][9][9];
     int v[81];
 };
