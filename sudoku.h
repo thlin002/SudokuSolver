@@ -28,6 +28,8 @@ public:
 	//Data Member
 	static const vector<vector<int> > gen;
 	vector<vector<int> > prob;
+    vector<vector<int> > ans;
     int alm[9][9][9];
+    int v[81];
 };
 #endif // SUDOKU_H

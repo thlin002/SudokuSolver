@@ -16,16 +16,24 @@ const vector<vector<int> > Sudoku::gen = {{1,2,3,4,5,6,7,8,9},
 Sudoku::Sudoku(){}
 Sudoku::Sudoku(vector<vector<int> > n){
     prob = n;
-    for(int i = 0; i < 9; ++i){ //initialoze to all pulled down
+    ans = n;
+    for(int i = 0; i < 9; ++i){     //initialize to all pulled down
         for(int j = 0; j < 9; ++j){
             for(int k = 0; k < 9; ++k){
                 alm[i][j][k] = 0;
             }
         }
     }
+    for(int i = 0; i < 81; ++i){    //initialize v
+        v[i] = 0;
+    }
+    int p = 1;
     for(int i = 0; i < 9; ++i){
         for(int j = 0; j < 9; ++j){
             if(prob.at(i).at(j) == 0){  //first double forloop is to identify void location
+                v[0] = p;       //record the void total count
+                v[p] = 9*i+j;   //record the void location
+                ++p;
                 for(int k = 0; k < 9; ++k){  // Row check
                     if(prob.at(i).at(k) > 0){
                         alm[i][j][prob.at(i).at(k)-1] = 1;   // non-available digit's bit is raised
@@ -53,6 +61,12 @@ Sudoku::Sudoku(vector<vector<int> > n){
             }
         }
     }
+/*
+    cout << v[0] << endl;
+    for(int i = 1; i < 81; ++i){
+        cout << v[i] << ' ';
+    }
+*/
 /*
     for(int i = 0; i < 9; ++i){     //print to check alm.
         for(int j = 0; j < 9; ++j){
@@ -177,31 +191,71 @@ void Sudoku::flip(int x){
 }
 
 //Solve
-int check(int x, vector<vector<int> > temp){
-    
+int check(int vx, vector<vector<int> > temp){
+    int b = 1;
+    int row = vx/9;
+    int col = vx%9;
+    for(int k = 0; k < 9; ++k){  // Row check
+        if(temp.at(row).at(k) == temp.at(row).at(col) && k != col){
+            b = 0;
+        }
+    }
+    for(int k = 0; k < 9; ++k){  //Column check
+        if(temp.at(k).at(col) == temp.at(row).at(col) && k != row){
+            b = 0;
+        }
+    }
+    int bc = col/3;
+    int br = row/3;
+    for(int k = br*3; k < br*3+3; ++k){ //Box check
+        for(int m = bc*3; m < bc*3+3; ++m){
+            if(temp.at(k).at(m) == temp.at(row).at(col) && k != row && m != col ){
+                b = 0;
+            }
+        }
+    }
+    return b;    
 }
 
-int backtrack( int x, int alm[][9][9], vector<vector<int> >temp){
-    int col = x % 9;
-    int rol = x / 9;
-//    cout << col << ' ' << rol;
+vector<vector<int> > backtrack( int x, int v[], int alm[][9][9], vector<vector<int> >temp, int *s){
+    int col = v[x] % 9;
+    int row = v[x] / 9;
+    vector<vector<int> >ans;
     int count = 0;
     while(count < 9){
-        int a = check(x, temp); 
-        if(a > 0 || x < 81){
+        temp.at(row).at(col) = alm[row][col][count]?temp.at(row).at(col):(count+1);
+        int a = check(v[x], temp); 
+        if(a > 0 && x < v[0]){
             ++x;
-            backtrack(x, alm, temp)
+            ans = backtrack(x, v, alm, temp, s);
         }
-        ++count;
+        else if(a > 0 || x == v[0]){
+            ans = temp;
+            if(*s < 2){
+                ++(*s);
+            }
+            else{
+                *s = 2;
+            }
+        }
+        ++count;    //
+    }
+    if(*s == 1){
+        return ans;
     }
     else{
-        return 0;
+        return temp;
     }
 }
 
 int Sudoku::solve(){
-    int x = 0;
+    int x = 1;
+    int state;
+    int *s;
+    state = 0;
+    s = &state;
     vector<vector<int> >temp(prob);
-    backtrack(x, alm, temp);
+    ans = backtrack(x, v, alm, temp, s);
+    cout << *s << endl;
 	return 0;
 }
